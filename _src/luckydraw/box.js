@@ -61,11 +61,11 @@
             this._$root = this.root();
             this._chests = $('div.chest',this._$root);
             this.start();
-            this._addInteractive();
         },
 
         start:function(){
             this._playWaitingAnimation();
+            this._addInteractive();
             return this;
         },
 
@@ -79,13 +79,11 @@
         },
 
         restart:function(){
-            this._playWaitingAnimation();
-            return this;
+            $('.prize>*',this._$root).hide();
+            return this.start();
         },
 
         _playWaitingAnimation:function($chest){
-           $('.prize',this._$root).hide();
-
             if(!$chest){
                 this._chests.removeClass('opening').addClass('waiting');
             }else{
@@ -104,14 +102,12 @@
             this._removeInteractive();
 
             //箱子
-//            $chest.removeClass('waiting').addClass('opening');
             $chest.removeClass('idle').addClass('opening');
 
             var $prize = $('.prize',this._$root);
             $prize.append($(this.data("result")).show());
 
             $prize.css({
-                //"top":$chest[0].offsetTop,
                 "marginLeft": -$(this.data("result"))[0].offsetWidth/2 +"px",
                 "marginTop": -$(this.data("result"))[0].offsetHeight/2 + "px",
                 "-webkit-transform-origin":"center"+" "+$chest[0].offsetTop+"px",
