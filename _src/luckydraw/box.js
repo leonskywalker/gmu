@@ -61,11 +61,11 @@
             this._$root = this.root();
             this._chests = $('div.chest',this._$root);
             this.start();
-            this.addInteractive();
+            this._addInteractive();
         },
 
         start:function(){
-            this.playWaitingAnimation();
+            this._playWaitingAnimation();
             return this;
         },
 
@@ -73,12 +73,19 @@
             this._data.result = result;
             this._data.resultID = id||0;
             if(immediateShow && this._chests[this._data.resultID]){
-                this.playOpenAnimation($(this._chests[this._data.resultID]));
+                this._playOpenAnimation($(this._chests[this._data.resultID]));
             }
             return this;
         },
 
-        playWaitingAnimation:function($chest){
+        restart:function(){
+            this._playWaitingAnimation();
+            return this;
+        },
+
+        _playWaitingAnimation:function($chest){
+           $('.prize',this._$root).hide();
+
             if(!$chest){
                 this._chests.removeClass('opening').addClass('waiting');
             }else{
@@ -87,14 +94,14 @@
             return this;
         },
 
-        playOpenAnimation:function($chest){
+        _playOpenAnimation:function($chest){
             var _self = this;
 
             if($.isFunction(this._data.openFunc)) {
                 this._data.openFunc.call(null);
             }
             this._chests.removeClass('waiting').addClass('idle');
-            this.removeInteractive();
+            this._removeInteractive();
 
             //箱子
 //            $chest.removeClass('waiting').addClass('opening');
@@ -136,15 +143,15 @@
             $(event.currentTarget).off('animationend');
         },
 
-        addInteractive:function(){
+        _addInteractive:function(){
             var _self = this;
 
             this._chests.on('click',function(event){
-                _self.playOpenAnimation($(event.currentTarget));
+                _self._playOpenAnimation($(event.currentTarget));
             });
         },
 
-        removeInteractive:function(){
+        _removeInteractive:function(){
             this._chests.off('click');
         }
 
