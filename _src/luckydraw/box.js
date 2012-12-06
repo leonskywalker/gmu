@@ -15,7 +15,6 @@
             numChests:3,
             openFunc:null,
             result:null,
-            resultID:null,
             noAnimation:false
         },
 
@@ -65,11 +64,10 @@
             return this;
         },
 
-        setResult:function(result,id,immediateShow){
+        setResult:function(result,id){
             this._data.result = result;
-            this._data.resultID = id||0;
-            if(immediateShow && this._chests[this._data.resultID]){
-                this._playOpenAnimation($(this._chests[this._data.resultID]));
+            if(id && this._chests[id]){
+                this._playOpenAnimation($(this._chests[id]));
             }
             return this;
         },
