@@ -85,9 +85,9 @@
 
         _playWaitingAnimation:function($chest){
             if(!$chest){
-                this._chests.removeClass('opening').addClass('waiting');
+                this._chests.removeClass('opening').removeClass("end").addClass('waiting');
             }else{
-                $chest.removeClass('opening').addClass('waiting');
+                $chest.removeClass('opening').removeClass("end").addClass('waiting');
             }
             return this;
         },
@@ -98,7 +98,7 @@
             if($.isFunction(this._data.openFunc)) {
                 this._data.openFunc.call(null);
             }
-            this._chests.removeClass('waiting').addClass('idle');
+            this._chests.removeClass('waiting').removeClass("end").addClass('idle');
             this._removeInteractive();
 
             //箱子
@@ -128,7 +128,6 @@
             if($.os.android){
                 $('.key',$chest).on('webkitAnimationEnd', _self._animationEndListener);
             }
-
 
             return this;
         },

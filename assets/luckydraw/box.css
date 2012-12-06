@@ -12,12 +12,18 @@
     position: absolute;
     z-index: 10;
     top:20px;
+    width:136px;
+    height:74px;
+    background: url("images/top.png");
 }
 
 .chest-bottom {
     position: absolute;
     z-index: 1;
     top: 40px;
+    width:136px;
+    height:106px;
+    background: url("images/bottom.png");
 }
 
 .waiting .animate {
@@ -47,6 +53,9 @@
     z-index: -10;
     top: 0;
     left:-5px;
+    width:115px;
+    height:63px;
+    background: url("images/top_open.png");
 
 }
 
@@ -70,6 +79,10 @@
     top: 20px;
     left: -50px;
     z-index: 20;
+
+    width:208px;
+    height:125px;
+    background: url("images/glow.png");
 }
 
 /*.chest:not(.opening) .glow {*/
@@ -101,6 +114,10 @@
     top: 90px;
     left: 90px;
     z-index: 15;
+
+    width:40px;
+    height:28px;
+    background: url("images/key.png");
 }
 
 .chest:not(.opening) .key {
@@ -143,8 +160,9 @@
     display: none;
 }
 
+
 .end .chest-opened-top{
-    -webkit-transform:scale(1,1.1) skewX(16deg) translate(-9px,-1px);
+    -webkit-transform:scale(1,1.1) skewX(16deg) translate(0px,2px);
 }
 
 /*animation details*/
