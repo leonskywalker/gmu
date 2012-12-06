@@ -1,0 +1,152 @@
+/**
+ * @file luckchest.js
+ * @name LuckChest
+ * @desc 宝箱抽奖
+ * @import core/zepto.js, core/zepto$core.js, core/zepto$ui.js, core/zepto$fx.js
+ */
+
+(function($){
+    $.ui.define('luckydrawbox',{
+
+        _chests:null,
+        _$root:null,
+
+        _data: {
+            numChests:3,
+            openFunc:null,
+            result:null,
+            resultID:null,
+            noAnimation:false
+        },
+
+        _create:function(){
+            //TODO
+            if(this.data("noAnimation")){
+
+            }else if(!this.data("noAnimation")){
+                var prize = $('<div class="prize animate"></div>');
+                var chests = $('');
+                for(var i= 0;i<this.data("result").numChests;i++){
+                    chests.append($('<div class="chest">'+
+                        '<div class="chest-top animate">'+
+                        '<img src="assets/images/top.png">'+
+                        '</div>'+
+                        '<div class="chest-opened-top animate">'+
+                        '<img src="assets/images/top_open.png">'+
+                        ' </div>'+
+                        '<div class="key animate">'+
+                        '<img src="assets/images/key.png">'+
+                        '</div>'+
+                        '<div class="glow animate">'+
+                        '<img src="assets/images/glow.png">'+
+                        '</div>'+
+                        ' <div class="chest-bottom animate">'+
+                        '<img src="assets/images/bottom.png">'+
+                        ' </div>'+
+                        '</div>'));
+                }
+            }
+
+            this.root().append(prize);
+            this.root().append(chests);
+
+            console.log("create");
+        },
+
+        _setup:function(fullMode){
+            console.log("setup");
+        },
+
+        _init:function(){
+            this._$root = this.root();
+            this._chests = $('div.chest',this._$root);
+            this.start();
+            this.addInteractive();
+        },
+
+        start:function(){
+            this.playWaitingAnimation();
+            return this;
+        },
+
+        setResult:function(result,id,immediateShow){
+            this._data.result = result;
+            this._data.resultID = id||0;
+            if(immediateShow && this._chests[this._data.resultID]){
+                this.playOpenAnimation($(this._chests[this._data.resultID]));
+            }
+            return this;
+        },
+
+        playWaitingAnimation:function($chest){
+            if(!$chest){
+                this._chests.removeClass('opening').addClass('waiting');
+            }else{
+                $chest.removeClass('opening').addClass('waiting');
+            }
+            return this;
+        },
+
+        playOpenAnimation:function($chest){
+            var _self = this;
+
+            if($.isFunction(this._data.openFunc)) {
+                this._data.openFunc.call(null);
+            }
+            this._chests.removeClass('waiting').addClass('idle');
+            this.removeInteractive();
+
+            //箱子
+//            $chest.removeClass('waiting').addClass('opening');
+            $chest.removeClass('idle').addClass('opening');
+
+            var $prize = $('.prize',this._$root);
+            $prize.append($(this.data("result")).show());
+
+            $prize.css({
+                //"top":$chest[0].offsetTop,
+                "marginLeft": -$(this.data("result"))[0].offsetWidth/2 +"px",
+                "marginTop": -$(this.data("result"))[0].offsetHeight/2 + "px",
+                "-webkit-transform-origin":"center"+" "+$chest[0].offsetTop+"px",
+                "-webkit-transform":"scale(0.1,0.1)"
+
+            }).hide();
+
+
+            $.later(function(){
+                $prize.show().animate({
+                   "scale":"1,1",
+                    "top":180
+                },280,"ease-out");
+            },1200);
+
+
+            //Android2.x不支持animation-fill-mode，需要对结束状态单独处理
+            if($.os.android){
+                $('.key',$chest).on('webkitAnimationEnd', _self._animationEndListener);
+            }
+
+
+            return this;
+        },
+
+        _animationEndListener:function(event){
+            console.log('end');
+            $(event.currentTarget).closest('.chest').removeClass('opening').addClass('end');
+            $(event.currentTarget).off('animationend');
+        },
+
+        addInteractive:function(){
+            var _self = this;
+
+            this._chests.on('click',function(event){
+                _self.playOpenAnimation($(event.currentTarget));
+            });
+        },
+
+        removeInteractive:function(){
+            this._chests.off('click');
+        }
+
+    });
+})(Zepto);
