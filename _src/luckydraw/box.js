@@ -27,21 +27,17 @@
                 var prize = $('<div class="prize animate"></div>');
                 var chests = $('');
                 for(var i= 0;i<this.data("result").numChests;i++){
-                    chests.append($('<div class="chest">'+
+                    chests.append($(
+                        '<div class="chest">'+
                         '<div class="chest-top animate">'+
-                        '<img src="assets/images/top.png">'+
                         '</div>'+
                         '<div class="chest-opened-top animate">'+
-                        '<img src="assets/images/top_open.png">'+
                         ' </div>'+
                         '<div class="key animate">'+
-                        '<img src="assets/images/key.png">'+
                         '</div>'+
                         '<div class="glow animate">'+
-                        '<img src="assets/images/glow.png">'+
                         '</div>'+
                         ' <div class="chest-bottom animate">'+
-                        '<img src="assets/images/bottom.png">'+
                         ' </div>'+
                         '</div>'));
                 }
