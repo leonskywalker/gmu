@@ -80,9 +80,6 @@
     -webkit-animation-name: glowOpening;
 }
 
-.opening .prize{
-    -webkit-animation-name: prizeOpening;
-}
 
 .opening .chest-top {
     -webkit-animation-name: topOpening;
@@ -208,10 +205,12 @@
 @-webkit-keyframes topOpening{
     0%{
         -webkit-transform:translate(0px,0px);
+         opacity:1;
     }
 
     27%{
          -webkit-transform:translate(0px,0px);
+         opacity:1;
     }
 
     36%{
@@ -240,21 +239,22 @@
 
 @-webkit-keyframes topOpening2{
     0%{
-        -webkit-transform:scale(1,1.1);
+        -webkit-transform:scale(1,1.1) skewX(0deg) translate(0px,0px);
         opacity:0;
     }
 
     50%{
-        -webkit-transform:scale(1,1.1);
+        -webkit-transform:scale(1,1.1) skewX(0deg) translate(0px,0px);
         opacity:0;
     }
     51%{
-        -webkit-transform:scale(1,1.1);
+        -webkit-transform:scale(1,1.1) skewX(0deg) translate(0px,0px);
         opacity:1;
     }
 
     59%{
-        -webkit-transform:scale(1,1.1);
+        -webkit-transform:scale(1,1.1)  skewX(0deg) translate(0px,0px);
+        opacity:1;
     }
 
     66%{
@@ -349,34 +349,6 @@
     100%{
          opacity:0;
          -webkit-transform:scale(0.8,0.8);
-    }
-
-}
-@-webkit-keyframes prizeOpening{
-
-    0%{
-        opacity:0;
-        -webkit-transform:scale(1,1);
-    }
-
-    80%{
-        opacity:0;
-        -webkit-transform:translate(0px,60px) scale(0.2,0.2);
-        animation-timing-function: ease-out;
-    }
-
-    90%{
-        opacity:100;
-        -webkit-transform:translate(0px,0px) scale(1,1.05);
-        animation-timing-function: ease-out;
-
-    }
-
-     95%{
-        -webkit-transform:scale(1.1,1);
-    }
-     100%{
-        -webkit-transform:scale(1,1);
     }
 
 }
