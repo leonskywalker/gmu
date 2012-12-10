@@ -1,17 +1,17 @@
 /*component styles*/
-.chest-still{
-    height:104px;
-    width:100px;
-    margin: 0 auto;
-    background: url("images/chest_still_small.png") no-repeat;
-}
-
 .chest{
     height:104px;
     width:100px;
     position: relative;
     margin:0 auto;
 
+}
+
+.chest.still{
+    background: url("images/chest_still_small.png") no-repeat;
+}
+
+.chest.animate{
     -webkit-transform:scale(0.65);/**TODO:以后将图片缩小，现在先为了小屏幕，缩小一点**/
 }
 
@@ -33,7 +33,7 @@
     background: url("images/bottom.png");
 }
 
-.waiting .animate {
+.animate.waiting > *{
     -webkit-animation-duration: 0.6s;
     -webkit-animation-fill-mode: both;
     -webkit-animation-timing-function: linear;
@@ -41,7 +41,7 @@
 }
 
 /*使得箱子不会同步播放等待动画，看上去自然些*/
-.waiting:nth-child(even) > .animate{
+.animate.waiting:nth-child(even) > *{
     -webkit-animation-delay:0.2s;
 }
 
@@ -135,7 +135,7 @@
     -webkit-animation-name: keyOpening;
 }
 
-.opening .animate{
+.animate.opening > *{
     -webkit-animation-duration: 1.4s;
     -webkit-animation-fill-mode: both;
     -webkit-animation-iteration-count: 1;

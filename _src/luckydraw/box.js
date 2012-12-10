@@ -21,12 +21,12 @@
         _create:function(){
             //TODO: noAnimation
             if(this.data("noAnimation")){
-                var prize = $('<div class="prize"></div>');
+                var prize = $('<div class="prize still"></div>');
                 this.root().append(prize);
                 var chest;
                 for(var i= 0;i<this.data("numChests");i++){
                     chest = ($(
-                        '<div class="chest-still">'+
+                        '<div class="chest still">'+
                          '</div>'));
                     this.root().append(chest);
                     //TODO:多次append优化
@@ -38,16 +38,16 @@
                 var chest;
                 for(var i= 0;i<this.data("numChests");i++){
                     chest = ($(
-                        '<div class="chest">'+
-                        '<div class="chest-top animate">'+
+                        '<div class="chest animate">'+
+                        '<div class="chest-top">'+
                         '</div>'+
-                        '<div class="chest-opened-top animate">'+
+                        '<div class="chest-opened-top">'+
                         ' </div>'+
-                        '<div class="key animate">'+
+                        '<div class="key">'+
                         '</div>'+
-                        '<div class="glow animate">'+
+                        '<div class="glow">'+
                         '</div>'+
-                        ' <div class="chest-bottom animate">'+
+                        ' <div class="chest-bottom">'+
                         ' </div>'+
                         '</div>'));
                     this.root().append(chest);
@@ -110,9 +110,19 @@
 
 
             if(this.data("result")){
-                this._playPrizeAnimation($chest);
+                if(this.data("noAnimation")){
+                    var $prize = $('.prize', this._$root);
+                    $prize.append($(this.data("result")).show());
+                    $prize.css({
+                        "marginLeft":-$(this.data("result"))[0].offsetWidth / 2 + "px",
+                        "marginTop":-$(this.data("result"))[0].offsetHeight / 2 + "px",
+                        "top":180
+                    });
+                }else{
+                    this._playPrizeAnimation($chest);
+                }
             }else{
-
+                   //TODO:wait for setResult
             }
             //Android2.x不支持animation-fill-mode，需要对结束状态单独处理
             if($.os.android){
