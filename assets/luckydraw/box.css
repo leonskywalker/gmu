@@ -1,4 +1,11 @@
 /*component styles*/
+.chest-still{
+    height:104px;
+    width:100px;
+    margin: 0 auto;
+    background: url("images/chest_still_small.png") no-repeat;
+}
+
 .chest{
     height:104px;
     width:100px;

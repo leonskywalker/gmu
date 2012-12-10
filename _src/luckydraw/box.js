@@ -19,14 +19,25 @@
         },
 
         _create:function(){
-            //TODO
+            //TODO: noAnimation
             if(this.data("noAnimation")){
+                var prize = $('<div class="prize"></div>');
+                this.root().append(prize);
+                var chest;
+                for(var i= 0;i<this.data("numChests");i++){
+                    chest = ($(
+                        '<div class="chest-still">'+
+                         '</div>'));
+                    this.root().append(chest);
+                    //TODO:多次append优化
+                }
 
             }else if(!this.data("noAnimation")){
                 var prize = $('<div class="prize animate"></div>');
-                var chests = $('');
-                for(var i= 0;i<this.data("result").numChests;i++){
-                    chests.append($(
+                this.root().append(prize);
+                var chest;
+                for(var i= 0;i<this.data("numChests");i++){
+                    chest = ($(
                         '<div class="chest">'+
                         '<div class="chest-top animate">'+
                         '</div>'+
@@ -39,12 +50,11 @@
                         ' <div class="chest-bottom animate">'+
                         ' </div>'+
                         '</div>'));
+                    this.root().append(chest);
+                    //TODO:多次append优化
                 }
+
             }
-
-            this.root().append(prize);
-            this.root().append(chests);
-
             console.log("create");
         },
 
