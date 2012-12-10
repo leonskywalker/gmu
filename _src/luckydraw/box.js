@@ -86,7 +86,7 @@
             return this;
         },
 
-        _playOpenAnimation:function($chest){
+         _playOpenAnimation:function($chest){
             var _self = this;
 
             if($.isFunction(this._data.openFunc)) {
@@ -98,32 +98,39 @@
             //箱子
             $chest.removeClass('idle').addClass('opening');
 
-            var $prize = $('.prize',this._$root);
-            $prize.append($(this.data("result")).show());
 
-            $prize.css({
-                "marginLeft": -$(this.data("result"))[0].offsetWidth/2 +"px",
-                "marginTop": -$(this.data("result"))[0].offsetHeight/2 + "px",
-                "-webkit-transform-origin":"center"+" "+$chest[0].offsetTop+"px",
-                "-webkit-transform":"scale(0.1,0.1)"
+            if(this.data("result")){
+                this._playPrizeAnimation($chest);
+            }else{
 
-            }).hide();
-
-
-            $.later(function(){
-                $prize.show().animate({
-                   "scale":"1,1",
-                    "top":180
-                },280,"ease-out");
-            },1200);
-
-
+            }
             //Android2.x不支持animation-fill-mode，需要对结束状态单独处理
             if($.os.android){
                 $('.key',$chest).on('webkitAnimationEnd', _self._animationEndListener);
             }
 
             return this;
+        },
+
+        _playPrizeAnimation:function ($chest) {
+            var $prize = $('.prize', this._$root);
+            $prize.append($(this.data("result")).show());
+
+            $prize.css({
+                "marginLeft":-$(this.data("result"))[0].offsetWidth / 2 + "px",
+                "marginTop":-$(this.data("result"))[0].offsetHeight / 2 + "px",
+                "-webkit-transform-origin":"center" + " " + $chest[0].offsetTop + "px",
+                "-webkit-transform":"scale(0.1,0.1)"
+
+            }).hide();
+
+
+            $.later(function () {
+                $prize.show().animate({
+                    "scale":"1,1",
+                    "top":180
+                }, 280, "ease-out");
+            }, 1200);
         },
 
         _animationEndListener:function(event){
