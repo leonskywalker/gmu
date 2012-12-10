@@ -26,7 +26,7 @@ function createChart(){
 test("create方式创建 & 参数默认",function(){
     stop();
     expect(36);
-    ua.loadcss(["chart/LineChart.css"], function(){
+    ua.loadcss(["chart/lineChart.css"], function(){
 	    var lineChart = $.ui.LineChart("#linechart", {});
 	    lineChart.setCategoryGrid(["09pm","10pm","11pm","12pm","01am","02am","03am","04am","05am","06am","07am","08am"]);
 	    lineChart.setValueGrid([0, 20, 40, 60, 80, 100]);

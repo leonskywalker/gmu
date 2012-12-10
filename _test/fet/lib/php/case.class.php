@@ -56,7 +56,7 @@
                 print "<script type='text/javascript' src='iscroll.js'></script>\n";
                 print "<script type='text/javascript' src='gmu.js'></script>\n";
             }else{
-                $importurl = "import.php?f=core/zepto.extend,core/zepto.core,core/zepto.support,core/zepto.event,core/zepto.fix,core/zepto.fx,core/zepto.highlight,core/zepto.iscroll,core/zepto.ui,webapp/button,webapp/dialog,webapp/navigator,webapp/toolbar,chart/base/chart,chart/line/lineChart,$caseName\n";
+                $importurl = "import.php?f=core/zepto.extend,core/zepto.core,core/zepto.support,core/zepto.event,core/zepto.fix,core/zepto.fx,core/zepto.highlight,core/zepto.iscroll,core/zepto.ui,webapp/button,webapp/dialog,webapp/navigator,webapp/toolbar,chart/base/chart,chart/line/lineChart,luckydraw/box,$caseName\n";
                 if ( $cov )
                     $importurl .= '&cov=true';
                 print "<script type='text/javascript' src='$importurl' ></script>\n";

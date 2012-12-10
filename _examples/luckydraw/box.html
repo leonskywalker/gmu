@@ -55,13 +55,6 @@
         var prizeID = Math.round(Math.random()*14+1);
         var prizeURL = 'prizes/prize'+(prizeID/10000+'').substr(2,4)+'.png';
 
-        /*
-         var luckchest = $('div.luckchest').luckchest({
-         openFunc:sendToSerever,
-         result:{pic:prizeURL}
-         });
-         */
-
         var luckchest=$('div.luckchest').luckydrawbox({
             "openFunc":sendToSerever
         }).luckydrawbox("this");
@@ -71,7 +64,7 @@
 
         function sendToSerever(){
             console.log("send to server");
-            $('#text').text("您抽中了"+prizeID+"号奖品");
+            $('#prize_dialog').text("您抽中了"+prizeID+"号奖品");
         }
 
         $('#prize_dialog').on("click",function(){
