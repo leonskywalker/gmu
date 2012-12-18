@@ -125,7 +125,7 @@
                    //TODO:wait for setResult
             }
             //Android2.x不支持animation-fill-mode，需要对结束状态单独处理
-            if($.os.android){
+            if($.os.android && ($.os.version[0] == "2" || !$.os.version)){
                 $('.key',$chest).on('webkitAnimationEnd', _self._animationEndListener);
             }
 

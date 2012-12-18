@@ -4,7 +4,6 @@
     width:100px;
     position: relative;
     margin:0 auto;
-
 }
 
 .chest.still{
@@ -322,7 +321,7 @@
 
 @-webkit-keyframes keyOpening{
     0%{
-        -webkit-transform:translate(214px,116px );
+        -webkit-transform:translate(160px,87px );
         opacity:0.5;
         animation-timing-function: ease-out;
     }
