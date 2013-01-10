@@ -19,7 +19,6 @@
         },
 
         _create:function(){
-            //TODO: noAnimation
             if(this.data("noAnimation")){
                 var prize = $('<div class="prize still"></div>');
                 this.root().append(prize);
@@ -65,10 +64,10 @@
         _init:function(){
             this._$root = this.root();
             this._chests = $('div.chest',this._$root);
-            this.start();
+            this._start();
         },
 
-        start:function(){
+        _start:function(){
             this._playWaitingAnimation();
             this._addInteractive();
             return this;
@@ -84,7 +83,7 @@
 
         restart:function(){
             $('.prize>*',this._$root).hide();
-            return this.start();
+            return this._start();
         },
 
         _playWaitingAnimation:function($chest){
