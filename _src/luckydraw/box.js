@@ -14,6 +14,7 @@
         _data: {
             numChests:3,
             openFunc:null,
+            startFunc:null,
             result:null,
             noAnimation:false
         },
@@ -98,8 +99,8 @@
          _playOpenAnimation:function($chest){
             var _self = this;
 
-            if($.isFunction(this._data.openFunc)) {
-                this._data.openFunc.call(null);
+            if($.isFunction(this._data.startFunc)) {
+                this._data.startFunc.call(null,$chest);
             }
             this._chests.removeClass('waiting').removeClass("end").addClass('idle');
             this._removeInteractive();
@@ -132,28 +133,33 @@
         },
 
         _playPrizeAnimation:function ($chest) {
-            var $prize = $('.prize', this._$root);
-            $prize.append($(this.data("result")).show());
-
-            $prize.css({
-                "marginLeft":-$(this.data("result"))[0].offsetWidth / 2 + "px",
-                "marginTop":-$(this.data("result"))[0].offsetHeight / 2 + "px",
-                "-webkit-transform-origin":"center" + " " + $chest[0].offsetTop + "px",
-                "-webkit-transform":"scale(0.1,0.1)"
-
-            }).hide();
+            $.later((function () {
+                if($.isFunction(this._data.openFunc)) {
+                    this._data.openFunc.call(null);
+                }
 
 
-            $.later(function () {
+                var $prize = $('.prize', this._$root);
+                $prize.append($(this.data("result")).show());
+
+
+                $prize.css({
+                    "marginLeft":-$(this.data("result"))[0].offsetWidth / 2 + "px",
+                    "marginTop":-$(this.data("result"))[0].offsetHeight / 2 + "px",
+                    "-webkit-transform-origin":"center" + " " + $chest[0].offsetTop + "px",
+                    "-webkit-transform":"scale(0.1,0.1)"
+
+                }).hide();
+
                 $prize.show().animate({
                     "scale":"1,1",
                     "top":180
                 }, 280, "ease-out");
-            }, 1200);
+            }).bind(this), 1200);
         },
 
         _animationEndListener:function(event){
-            console.log('end');
+            //console.log('end');
             $(event.currentTarget).closest('.chest').removeClass('opening').addClass('end');
             $(event.currentTarget).off('animationend');
         },
