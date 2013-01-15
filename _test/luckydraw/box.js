@@ -10,6 +10,8 @@ module("box", {
 
 });
 
+var animationDuration = 1300;
+
 
 test("create方式创建 & 参数默认",function(){
     stop();
@@ -115,7 +117,7 @@ test("初始化参数:openFunc在未设置prize情况下不调用",function(){
 
         ua.click($(".chest")[1]);
         ok(true,"点击了宝箱,1.2秒后开奖");
-        $.later(start,1300);
+        $.later(start,animationDuration);
     }
 );
 
@@ -134,7 +136,7 @@ test("初始化参数:openFunc在设置result情况下调用",function(){
 
         ua.click($(".chest")[1]);
         ok(true,"点击了宝箱,1.2秒后开奖");
-        $.later(start,1300);
+        $.later(start,animationDuration);
     }
 );
 
@@ -187,27 +189,77 @@ test("接口:restart",function(){
 
         $("body").append('<div id="prize_1">prize</div>');
 
-        expect(6);
+        expect(3);
         var luckchest = $.ui.luckydrawbox("#luckchest",{
             result:"#prize_1"
         });
 
         ok(!ua.isShown($('.prize')),"点击前，奖品不显示");
-        equals($('#luckchest .chest-top').css("-webkit-animation-play-state"),"running","播放动画");
 
         ua.click($(".chest")[1]);
 
         $.later(function(){
-           ok(ua.isShown($('.prize')[0]),"点击后，奖品1.2秒后显示");
-           notEqual($('#luckchest .chest-top').css("-webkit-animation-play-state"),"running","奖品显示后不播放动画");
+            ok(ua.isShown($('.prize')[0]),"点击后，奖品1.2秒后显示");
 
             luckchest.restart();
 
             ok(!ua.isShown($('.prize')),"restart，奖品不显示");
-            equals($('#luckchest .chest-top').css("-webkit-animation-play-state"),"running","播放动画");
 
             start();
-        },1300);
+        },animationDuration);
+
+    }
+);
+
+test("交互：设置result后，点击宝箱",function(){
+        stop();
+
+        $("body").append('<div id="prize_1">prize</div>');
+
+        expect(2);
+        var luckchest = $.ui.luckydrawbox("#luckchest",{
+            result:"#prize_1"
+        });
+
+        ok(!ua.isShown($('.prize')),"点击前，奖品不显示");
+
+        ua.click($(".chest")[1]);
+
+        $.later(function(){
+            ok(ua.isShown($('.prize')[0]),"点击后，奖品1.2秒后显示");
+            start();
+        },animationDuration);
+
+    }
+);
+
+test("交互：未设置result，点击宝箱，等待setResult",function(){
+        stop();
+
+        $("body").append('<div id="prize_1">prize</div>');
+
+        expect(3);
+        var luckchest = $.ui.luckydrawbox("#luckchest",{
+        });
+
+        ok(!ua.isShown($('.prize')),"点击前，奖品不显示");
+
+        ua.click($(".chest")[1]);
+
+        $.later(function(){
+            ok(!ua.isShown($('.prize')[0]),"点击后，奖品不显示");
+
+            luckchest.setResult("#prize_1");
+
+            $.later(function(){
+                ok(ua.isShown($('.prize')[0]),"设置result后，奖品才显示");
+
+                start();
+
+            },200);
+
+
+        },animationDuration);
 
     }
 );

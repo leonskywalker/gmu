@@ -10,6 +10,7 @@
 
         _chests:null,
         _$root:null,
+        _clickedChest:null,
 
         _data: {
             numChests:3,
@@ -75,10 +76,20 @@
         },
 
         setResult:function(result,id){
+
+            var shouldPlay = false;
+
+            if(!this.data("result") && this._clickedChest){
+                shouldPlay = true;
+            }
+
             this._data.result = result;
             if(id && this._chests[id]){
                 this._playOpenAnimation($(this._chests[id]));
+            }else if(shouldPlay){
+                this._playPrizeAnimation(this._clickedChest,0);
             }
+
             return this;
         },
 
@@ -110,19 +121,10 @@
 
 
             if(this.data("result")){
-                if(this.data("noAnimation")){
-                    var $prize = $('.prize', this._$root);
-                    $prize.append($(this.data("result")).show());
-                    $prize.css({
-                        "marginLeft":-$(this.data("result"))[0].offsetWidth / 2 + "px",
-                        "marginTop":-$(this.data("result"))[0].offsetHeight / 2 + "px",
-                        "top":180
-                    });
-                }else{
-                    this._playPrizeAnimation($chest);
-                }
+                 this._playPrizeAnimation($chest);
             }else{
-                   //TODO:wait for setResult
+                this._clickedChest = $chest;
+
             }
             //Android2.x不支持animation-fill-mode，需要对结束状态单独处理
             if($.os.android && ($.os.version[0] == "2" || !$.os.version)){
@@ -132,20 +134,37 @@
             return this;
         },
 
-        _playPrizeAnimation:function ($chest) {
-            $.later((function () {
-                if($.isFunction(this._data.openFunc)) {
-                    this._data.openFunc.call(null);
-                }
+        _playPrizeAnimation:function ($chest,delay) {
 
-
+            //没有动画
+            if(this.data("noAnimation")){
                 var $prize = $('.prize', this._$root);
                 $prize.append($(this.data("result")).show());
-
-
                 $prize.css({
                     "marginLeft":-$(this.data("result"))[0].offsetWidth / 2 + "px",
                     "marginTop":-$(this.data("result"))[0].offsetHeight / 2 + "px",
+                    "top":180
+                });
+
+                return;
+            }
+
+            //有动画
+            var self = this;
+            var delay = (delay === undefined)? 1200:delay;
+            $.later(function () {
+                if($.isFunction(self._data.openFunc)) {
+                    self._data.openFunc.call(null);
+                }
+
+
+                var $prize = $('.prize', self._$root);
+                $prize.append($(self.data("result")).show());
+
+
+                $prize.css({
+                    "marginLeft":-$(self.data("result"))[0].offsetWidth / 2 + "px",
+                    "marginTop":-$(self.data("result"))[0].offsetHeight / 2 + "px",
                     "-webkit-transform-origin":"center" + " " + $chest[0].offsetTop + "px",
                     "-webkit-transform":"scale(0.1,0.1)"
 
@@ -155,7 +174,7 @@
                     "scale":"1,1",
                     "top":180
                 }, 280, "ease-out");
-            }).bind(this), 1200);
+            }, delay);
         },
 
         _animationEndListener:function(event){
