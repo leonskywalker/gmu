@@ -32,6 +32,7 @@
     height: 232px;
     background: url("images/wheel.png");
     -webkit-transform-origin: center center;
+    -webkit-transform:rotateZ(0deg);
 
     left:22px;
     top:21px;
@@ -45,4 +46,12 @@
 
     left:105px;
     top:105px;
+}
+
+.wheel .button:active{
+    background: url("images/button_active.png");
+}
+
+.wheel .button.disabled{
+    background: url("images/button_rotating.png");
 }

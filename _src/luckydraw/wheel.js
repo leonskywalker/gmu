@@ -16,7 +16,9 @@
             startFunc:null,
             result:null,
             resultID:null,
-            noAnimation:false
+            noAnimation:false,
+            rotationTime:6000,
+            prizeDelay:500
         },
 
         _create:function(){
@@ -44,7 +46,12 @@
         },
 
         _playWaitingAnimation:function(){
-            //TODO:现在没有等待动画
+            $(".wheel-body",this._$root).animate({
+                "rotateZ":"0deg"
+            },{
+                duration:1000,
+                easing:"ease"
+            });
             return this;
         },
 
@@ -53,11 +60,12 @@
 
             $('.button',this._$root).on('click',function(event){
                 _self._playOpenAnimation();
-            });
+            }).removeClass("disabled");
         },
 
         _removeInteractive:function(){
-            $('.button',this._$root).off('click');
+            $('.button',this._$root).off('click').addClass("disabled");
+
         },
 
         _playOpenAnimation:function(){
@@ -69,12 +77,17 @@
             var resultID = this.data("resultID") || 1;
 
             $wheel.animate({
-                rotateZ:(360*(this.data("numDivides")-1) + (360/this.data("numDivides"))*resultID)+ "deg"
-            },5000,"ease",function(){
-                self._playPrizeAnimation(200);
-                $wheel.css({
-                    "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
-                })
+                rotateZ:(360*4 + (360/this.data("numDivides"))*resultID)+ "deg"
+            },{
+                duration:this.data("rotationTime"),
+                easing:   "ease",
+                queue:false,
+                complete:function(){
+                    self._playPrizeAnimation(self.data("prizeDelay"));
+                    $wheel.css({
+                        "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
+                    });
+                }
             });
 
 
