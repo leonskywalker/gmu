@@ -22,7 +22,17 @@
         },
 
         _create:function(){
-
+            var prize = $('<div class="prize"></div>');
+            this.root().append(prize);
+            var wheel = $(
+                '<div class="wheel">'+
+                    '<div class="wheel-ring"></div>'+
+                    '<div class="wheel-body"></div>'+
+                    '<div class="wheel-pointer"></div>'+
+                    '<div class="wheel-button"></div>'+
+                '</div>'
+            );
+            this.root().append(wheel);
         },
 
         _setup:function(){
@@ -45,6 +55,33 @@
             return this._start();
         },
 
+        setResult:function(result, id, startImmediately){
+            /*
+
+            var shouldPlay = false;
+
+            if(!this.data("result") && this._clickedChest){
+                shouldPlay = true;
+            }
+
+            this._data.result = result;
+            if(id && this._chests[id]){
+                this._playOpenAnimation($(this._chests[id]));
+            }else if(shouldPlay){
+                this._playPrizeAnimation(this._clickedChest,0);
+            }
+            */
+
+            this._data.result = result;
+            this._data.resultID = id;
+
+            if(startImmediately){
+                this._playOpenAnimation();
+            }
+
+            return this;
+        },
+
         _playWaitingAnimation:function(){
             $(".wheel-body",this._$root).animate({
                 "rotateZ":"0deg"
@@ -58,13 +95,13 @@
         _addInteractive:function(){
             var _self = this;
 
-            $('.button',this._$root).on('click',function(event){
+            $('.wheel-button',this._$root).on('click',function(event){
                 _self._playOpenAnimation();
             }).removeClass("disabled");
         },
 
         _removeInteractive:function(){
-            $('.button',this._$root).off('click').addClass("disabled");
+            $('.wheel-button',this._$root).off('click').addClass("disabled");
 
         },
 
@@ -74,26 +111,32 @@
 
             var $wheel = $(".wheel-body",this._$root);
 
-            var resultID = this.data("resultID") || 1;
+            var resultID = this.data("resultID");
 
-            $wheel.animate({
-                rotateZ:(360*4 + (360/this.data("numDivides"))*resultID)+ "deg"
-            },{
-                duration:this.data("rotationTime"),
-                easing:   "ease",
-                queue:false,
-                complete:function(){
-                    self._playPrizeAnimation(self.data("prizeDelay"));
-                    $wheel.css({
-                        "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
-                    });
-                }
-            });
 
+            if(this.data("noAnimation")){
+                self._playPrizeAnimation(self.data("prizeDelay"));
+                $wheel.css({
+                    "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
+                });
+            }else{
+                $wheel.animate({
+                    rotateZ:(360*4 + (360/this.data("numDivides"))*resultID)+ "deg"
+                },{
+                    duration:this.data("rotationTime"),
+                    easing:   "ease",
+                    queue:false,
+                    complete:function(){
+                        self._playPrizeAnimation(self.data("prizeDelay"));
+                        $wheel.css({
+                            "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
+                        });
+                    }
+                });
+            }
 
 
             this._removeInteractive();
-            //TODO:按钮变灰
 
             return this;
         },

@@ -9,14 +9,14 @@
     position:relative;
 }
 
-.wheel .ring{
+.wheel .wheel-ring{
     position: absolute;
     width: 275px;
     height: 275px;
     background: url("images/wheel_ring.png");
 }
 
-.wheel .pointer{
+.wheel .wheel-pointer{
     position: absolute;
     width: 23px;
     height: 45px;
@@ -38,7 +38,7 @@
     top:21px;
 }
 
-.wheel .button{
+.wheel .wheel-button{
     position: absolute;
     width: 65px;
     height: 65px;
@@ -48,10 +48,10 @@
     top:105px;
 }
 
-.wheel .button:active{
+.wheel .wheel-button:active{
     background: url("images/button_active.png");
 }
 
-.wheel .button.disabled{
+.wheel .wheel-button.disabled{
     background: url("images/button_rotating.png");
 }

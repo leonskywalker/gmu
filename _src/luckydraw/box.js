@@ -69,6 +69,11 @@
             this._start();
         },
 
+        /**
+         * 开始
+         * @return this
+         * @private
+         */
         _start:function(){
             this._playWaitingAnimation();
             this._addInteractive();
