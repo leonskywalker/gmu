@@ -30,7 +30,6 @@
                         '<div class="chest still">'+
                          '</div>'));
                     this.root().append(chest);
-                    //TODO:多次append优化
                 }
 
             }else if(!this.data("noAnimation")){
@@ -56,11 +55,10 @@
                 }
 
             }
-            console.log("create");
         },
 
         _setup:function(fullMode){
-            console.log("setup");
+        	this._data.numChests = $('div.chest',this.root()).length;
         },
 
         _init:function(){
@@ -183,7 +181,6 @@
         },
 
         _animationEndListener:function(event){
-            //console.log('end');
             $(event.currentTarget).closest('.chest').removeClass('opening').addClass('end');
             $(event.currentTarget).off('animationend');
         },
