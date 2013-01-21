@@ -34,7 +34,8 @@
 <script id="bootstrap" src="../../example.js"
         type="text/javascript"
         data-theme="default"
-        data-use="chart/base/chart.js, chart/line/lineChart.js"
+        data-use="chart/core/Chart.js, chart/line/lineChart.js"
+        data-backurl="../../"
         data-page="折线图|linechart.html">
     //<![CDATA[
     /**
@@ -61,7 +62,8 @@
             var chartWidth = window.innerWidth - 20;
             var chartHeight = 200;
 
-            var lineChart = $.ui.LineChart($("#linechart"), {
+
+            var lineChart = $.ui.LineChart("#linechart", {
                 "width":chartWidth - 65,
                 "height":200,
                 "tipsHeight":25,

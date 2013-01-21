@@ -10,7 +10,7 @@ define("BASE_DIR", dirname(__FILE__).DS);
 header("Content-type: text/html; charset=utf-8");
 
 class GMU2FIS {
-    const TYPE_WEBAPP = "webapp";
+    const TYPE_WEBAPP = "widget";
 
     protected $type;
     protected $outputDir;
@@ -334,15 +334,15 @@ class GMU2FIS {
     }
 
     public static function run() {
-        $script = new GMU2FIS('webapp');
+        $script = new GMU2FIS('widget');
         $script->build();
     }
 
     public static function rScandir($path, $exts, &$res=array()) {
-        $path = rtrim($path, '/\\');
+        $path = rtrim(str_replace('\\', '/', $path), '/\\');
         $files = scandir($path);
         foreach ($files as $file) {
-            $filepath = $path . DS . $file;
+            $filepath = $path . '/' . $file;
             if (is_dir($filepath) && $file[0] != '.') {
                 self::rScandir($filepath, $exts, $res);
             } else {

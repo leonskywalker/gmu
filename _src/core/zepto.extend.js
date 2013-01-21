@@ -1,6 +1,6 @@
 /**
  * @name Extend
- * @file
+ * @file 对Zepto做了些扩展，以下所有JS都依赖与此文件
  * @desc 对Zepto一些扩展，组件必须依赖
  * @import core/zepto.js
  */
@@ -180,7 +180,6 @@
          *
          * @grammar $.throttle(delay, fn) ⇒ function
          * @name $.throttle
-         * @since v1.0.4+
          * @example var touchmoveHander = function(){
          *     //....
          * }
@@ -250,7 +249,6 @@
          *
          * @grammar $.debounce(delay, fn[, at_begin]) ⇒ function
          * @name $.debounce
-         * @since v1.0.4+
          * @example var touchmoveHander = function(){
          *     //....
          * }
@@ -262,53 +260,6 @@
          */
         debounce: function(delay, fn, t) {
             return fn === undefined ? $.throttle(250, delay, false) : $.throttle(delay, fn, t === undefined ? false : t !== false);
-        },
-        /**
-         * @desc 调用地图API，获取当前地址位置详细信息
-         * **successCB：** 获取信息成功回调函数
-         * **errorCB：** 获取信息失败回调函数
-         * **options:**
-         * - ***enableHighAccuracy***: boolean 是否要求高精度的地理信息
-         * - ***timeout***: 获取信息的超时限制
-         * - ***maximumAge***: 对地理信息进行缓存的时间
-         *
-         * @grammar $.location(fn, fn, options) ⇒ function
-         * @name $.location
-         * @example $.location(function(rs){
-         *      console.log(rs)
-         *  })
-         */
-        location : function(successCB, errorCB, options){
-            //获取地图提供的js api
-            $.ajaxJSONP({
-                url: 'http://api.map.baidu.com/api?v=1.4&callback=?',
-                success: function(){
-                    window.navigator.geolocation
-                        ? window.navigator.geolocation.getCurrentPosition(handleSuccess, handleError, $.extend({
-                        enableHighAccuracy : true
-                    }, options))
-                        : (errorCB && errorCB("浏览器不支持html5来获取地理位置信息"))
-                }
-            })
-            function handleSuccess(position){
-                //获取当前手机经纬度坐标，并将其转化成百度坐标
-                var lng = position.coords.longitude,
-                    lat = position.coords.latitude,
-                    xyUrl = "http://api.map.baidu.com/ag/coord/convert?from=2&to=4&x=" + lng + "&y=" + lat + '&callback=?'
-                $.ajaxJSONP({
-                    url: xyUrl,
-                    success: function(data){
-                        var gc = new BMap.Geocoder()
-                        gc.getLocation(new BMap.Point(data.x, data.y), function(rs){	//data.x data.y为加密后的百度坐标，传入Point后可解析成详细地址
-                            successCB && successCB(rs)
-                        })
-                    }
-                })
-            }
-
-            function handleError(){
-                errorCB && errorCB(arguments)
-            }
         }
     });
 
@@ -439,7 +390,7 @@
      * @desc 检测设备对某些属性或方法的支持情况
      *
      * **可用属性**
-     * - ***orientation*** 检测是否支持转屏事件，UC中存在orientaion，但转屏不会触发该事件，故UC属于不支持转屏事件
+     * - ***orientation*** 检测是否支持转屏事件，UC中存在orientaion，但转屏不会触发该事件，故UC属于不支持转屏事件(iOS 4上qq, chrome都有这个现象)
      * - ***touch*** 检测是否支持touch相关事件
      * - ***cssTransitions*** 检测是否支持css3的transition
      * - ***has3d*** 检测是否支持translate3d的硬件加速
@@ -450,7 +401,7 @@
      * }
      */
     $.support = $.extend($.support || {}, {
-        orientation: !$.browser.uc && "orientation" in window && "onorientationchange" in window,
+        orientation: !($.browser.uc || (parseFloat($.os.version)<5 && ($.browser.qq || $.browser.chrome))) && "orientation" in window && "onorientationchange" in window,
         touch: "ontouchend" in document,
         cssTransitions: "WebKitTransitionEvent" in window,
         has3d: 'WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix()
@@ -463,31 +414,31 @@
 (function($) {
     /** detect orientation change */
     $(document).ready(function () {
-        var getOrt = function() {
+        var getOrt = "matchMedia" in window ? function(){
+                return window.matchMedia("(orientation: portrait)").matches?'portrait':'landscape';
+            }:function(){
                 var elem = document.documentElement;
-                return elem.clientWidth / elem.clientHeight < 1.1 ? "portrait" : "landscape";
+                return elem.clientWidth / Math.max(elem.clientHeight, 320) < 1.1 ? "portrait" : "landscape";
             },
             lastOrt = getOrt(),
             handler = function(e) {
-                clearInterval(timeId);
-                timeId = $.later(function() {
-                    var curOrt, done = function(){
-                        clearInterval(timeId);
+                if(e.type == 'orientationchange'){
+                    return $(window).trigger('ortchange');
+                }
+                maxTry = 20;
+                clearInterval(timer);
+                timer = $.later(function() {
+                    var curOrt = getOrt();
+                    if (lastOrt !== curOrt) {
+                        lastOrt = curOrt;
+                        clearInterval(timer);
                         $(window).trigger('ortchange');
-                    };
-                    if(e.type == 'orientationchange') {
-                        done();
-                    } else {
-                        curOrt = getOrt();
-                        if (lastOrt !== curOrt) {
-                            lastOrt = curOrt;
-                            done();
-                        }
+                    } else if(--maxTry){//最多尝试20次
+                        clearInterval(timer);
                     }
-
                 }, 50, true);
             },
-            timeId;
+            timer, maxTry;
         $(window).bind($.support.orientation ? 'orientationchange' : 'resize', $.debounce(handler));
     });
 
@@ -507,7 +458,7 @@
      */
     /** dispatch scrollStop */
     function _registerScrollStop(){
-        $(window).on('scroll', $.debounce(200, function() {
+        $(window).on('scroll', $.debounce(80, function() {
             $(document).trigger('scrollStop');
         }, false));
     }

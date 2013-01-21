@@ -1,6 +1,3 @@
-//     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
-//     Zepto.js may be freely distributed under the MIT license.
 
 var Zepto = (function() {
   var undefined, key, $, classList, emptyArray = [], slice = emptyArray.slice,
@@ -13,7 +10,7 @@ var Zepto = (function() {
        * added by chenluyang
        * @reason 判断是否为ie10
        */
-    isWp = document.__proto__ ? 0 : 1,
+    isWp = document.__proto__ ? false : true,
 
     // Used by `$.zepto.init` to wrap elements, text/comment nodes, document,
     // and document fragment node types.
@@ -28,7 +25,7 @@ var Zepto = (function() {
       'td': tableRow, 'th': tableRow,
       '*': document.createElement('div')
     },
-    readyRE = /complete|loaded|interactive/,
+    readyRE = /complete|loaded/,
     classSelectorRE = /^\.([\w-]+)$/,
     idSelectorRE = /^#([\w-]+)$/,
     tagSelectorRE = /^[\w-]+$/,
@@ -102,10 +99,31 @@ var Zepto = (function() {
   // The generated DOM nodes are returned as an array.
   // This function can be overriden in plugins for example to make
   // it compatible with browsers that don't support the DOM fully.
+    function closeHTML(str){
+        var arrTags = ["span","font","b","u","i","h1","h2","h3","h4","h5","h6","p","li","ul","table","div"],
+            intOpen,intClose, re, arrMatch
+        for(var i = 0; i < arrTags.length; i++){
+            try{
+                intOpen = 0
+                intClose =0
+                re = new RegExp("\\<" + arrTags[i] + "( [^\\<\\>]+|)\\>","ig")
+                arrMatch = str.match(re)
+                if(arrMatch != null) intOpen = arrMatch.length
+                re = new RegExp("\\<\\/"+arrTags[i]+"\\>","ig")
+                arrMatch = str.match(re)
+                if(arrMatch != null) intClose = arrMatch.length
+                for(var j = 0;j < intOpen - intClose;j++){
+                    str += "</"+arrTags[i]+">"
+                }
+            }catch(e){}
+        }
+        return str
+    }
   zepto.fragment = function(html, name) {
     if (name === undefined) name = fragmentRE.test(html) && RegExp.$1
     if (!(name in containers)) name = '*'
     var container = containers[name]
+    isWp && (html = closeHTML(html))    //added by chenluyang, for ie10 tag补全
     container.innerHTML = '' + html
     return $.each(slice.call(container.childNodes), function(){
       container.removeChild(this)
@@ -129,13 +147,10 @@ var Zepto = (function() {
      *  }
      */
   zepto.Z = function(dom, selector) {
-    var _pro = $.extend({isZ:true,selector:selector||''}, $.fn);
-       dom = dom || []
-    if(!isWp){
-      dom.__proto__ = _pro
-    }else{
-      $.extend(dom,_pro)
-    }
+    dom = dom || []
+    isWp ? $.extend(dom, $.fn) : (dom.__proto__ = arguments.callee.prototype)
+    dom.selector = selector || ''
+    dom.isZ = true
     return dom
   }
 
@@ -329,10 +344,10 @@ var Zepto = (function() {
     ready: function(callback){
         /**
          *  modified by chenluyang
-         *  @reason 在IE10里，interactive触发的时候，body是还没开始解析的，所以直接触发函数获取body会报错。所以在IE下，直接将函数绑定在DOMContentLoaded中
+         *  @reason 在IE10里，interactive触发的时候，body是还没开始解析的，所以直接触发函数获取body会报错。所以去掉了interactive
          *  @original  if (readyRE.test(document.readyState)) callback($)
          */
-      if (readyRE.test(document.readyState) && !isWp) callback($)
+      if (readyRE.test(document.readyState) && (!isWp || document.readyState != 'interactive')) callback($)
       else document.addEventListener('DOMContentLoaded', function(){ callback($) }, false)
       return this
     },
@@ -605,7 +620,11 @@ var Zepto = (function() {
           this.each(function(){ this.style.removeProperty(dasherize(property)) })
         else
           css = dasherize(property) + ":" + maybeAddPx(property, value)
-
+      /*
+       * added by chenluyang
+       * @reason IE中，不会将rgba（*，*，*，1）自动转化成rgb（*，*，*）
+       */
+      css = css.replace(/rgba\((\d*\,\s*\d*\,\s*\d*)\,\s*1\)/g, 'rgb($1)')
       return this.each(function(){ this.style.cssText += ';' + css })
     },
     index: function(element){

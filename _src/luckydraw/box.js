@@ -2,7 +2,7 @@
  * @file luckchest.js
  * @name LuckChest
  * @desc 宝箱抽奖
- * @import core/zepto.js, core/zepto$core.js, core/zepto$ui.js, core/zepto$fx.js
+ * @import core/zepto.js, core/zepto.core.js, core/zepto.ui.js, core/zepto.fx.js
  */
 
 (function($){
@@ -43,13 +43,13 @@
                         '<div class="chest-top">'+
                         '</div>'+
                         '<div class="chest-opened-top">'+
-                        ' </div>'+
+                        '</div>'+
                         '<div class="key">'+
                         '</div>'+
                         '<div class="glow">'+
                         '</div>'+
-                        ' <div class="chest-bottom">'+
-                        ' </div>'+
+                        '<div class="chest-bottom">'+
+                        '</div>'+
                         '</div>'));
                     this.root().append(chest);
                     //TODO:多次append优化

@@ -1,9 +1,8 @@
 /**
- * Created with JetBrains WebStorm.
- * User: Liuyang
- * Date: 13-1-15
- * Time: 下午7:02
- * To change this template use File | Settings | File Templates.
+ * @file wheel.js
+ * @name FortuneWheel
+ * @desc 转盘抽奖
+ * @import core/zepto.js, core/zepto.core.js, core/zepto.ui.js, core/zepto.fx.js
  */
 (function($){
     $.ui.define('fortunewheel',{

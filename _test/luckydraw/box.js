@@ -22,11 +22,11 @@ test("create方式创建 & 参数默认",function(){
         ok(ua.isShown(luckchest._el[0]), "组件显示");
         equals(luckchest._el.attr("id"), "luckchest", "The el is right");
         
-        equals(luckchest._data.numChests, 3, "默认参数正确");
-        equals(luckchest._data.result, null, "默认参数正确");
-        equals(luckchest._data.startFunc, null, "默认参数正确");
-        equals(luckchest._data.openFunc, null, "默认参数正确");
-        equals(luckchest._data.noAnimation, false, "默认参数正确");
+        equals(luckchest._data.numChests, 3, "默认参数numChests正确");
+        equals(luckchest._data.result, null, "默认参数result正确");
+        equals(luckchest._data.startFunc, null, "默认参数startFunc正确");
+        equals(luckchest._data.openFunc, null, "默认参数openFunc正确");
+        equals(luckchest._data.noAnimation, false, "默认参数noAnimation正确");
         
         equals(luckchest._el.find('.prize').length, 1, "dom 渲染正确");
         ok(!ua.isShown(luckchest._el.find('.prize')[0]), "dom 渲染正确");
@@ -55,7 +55,7 @@ test("setup方式创建",function(){
     var prize = $('<div class="prize animate"></div>');
     $('#luckchest').append(prize);
     var chest;
-    for(var i= 0;i<4;i++){
+    for(var i = 0;i<4;i++){
         chest = ($(
             '<div class="chest animate">'+
                 '<div class="chest-top">'+

@@ -1,6 +1,9 @@
-//     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
-//     Zepto.js may be freely distributed under the MIT license.
+/**
+ * @file
+ * @name
+ * @desc
+ * @import zepto.js, event.js
+ */
 
 ;(function($, undefined){
   var prefix = '', eventPrefix, endEventName, endAnimationName,
@@ -42,7 +45,10 @@
     if (duration) duration = duration / 1000
     return this.anim(properties, duration, ease, callback)
   }
-
+    /**
+     * added by chenluyang
+     * @reason b
+     */
   $.fn.animateFrom = function(properties, duration, ease, callback){
     if ($.isObject(duration))
       ease = duration.easing, callback = duration.complete, duration = duration.duration

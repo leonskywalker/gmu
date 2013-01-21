@@ -157,13 +157,10 @@ var Zepto = (function() {
      *  }
      */
   zepto.Z = function(dom, selector) {
-    var _pro = $.extend({isZ:true,selector:selector||''}, $.fn);
-       dom = dom || []
-    if(!isWp){
-      dom.__proto__ = _pro
-    }else{
-      $.extend(dom,_pro)
-    }
+    dom = dom || []
+    isWp ? $.extend(dom, $.fn) : (dom.__proto__ = arguments.callee.prototype)
+    dom.selector = selector || ''
+    dom.isZ = true
     return dom
   }
 
@@ -352,12 +349,12 @@ var Zepto = (function() {
     },
 
     ready: function(callback){
-       /**
+	   /**
          *  modified by chenluyang
          *  @reason 在IE10里，interactive触发的时候，body是还没开始解析的，所以直接触发函数获取body会报错。所以在IE下，直接将函数绑定在DOMContentLoaded中
          *  @original  if (readyRE.test(document.readyState)) callback($)
          */
-      if (readyRE.test(document.readyState) && !isWp) callback($)
+      if (readyRE.test(document.readyState) && (!isWp || document.readyState != 'interactive')) callback($)
       else document.addEventListener('DOMContentLoaded', function(){ callback($) }, false)
       return this
     },
@@ -1546,3 +1543,5 @@ window.Zepto = Zepto
     $.fn[m] = function(callback){ return this.bind(m, callback) }
   })
 })(Zepto)
+
+exports = Zepto;
