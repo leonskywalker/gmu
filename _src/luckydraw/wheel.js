@@ -57,7 +57,6 @@
 
         setResult:function(result, id, startImmediately){
             /*
-
             var shouldPlay = false;
 
             if(!this.data("result") && this._clickedChest){
@@ -96,7 +95,11 @@
             var _self = this;
 
             $('.wheel-button',this._$root).on('click',function(event){
-                _self._playOpenAnimation();
+                if(_self.data("result") && _self.data("resultID")!=undefined){
+                    _self._playOpenAnimation();
+                }else{
+                    _self._playWaitForResultAnimation();
+                }
             }).removeClass("disabled");
         },
 
@@ -104,6 +107,64 @@
             $('.wheel-button',this._$root).off('click').addClass("disabled");
 
         },
+
+        _playWaitForResultAnimation:function(){
+            var timeout = 120*1000;//120s
+            var $wheel = $(".wheel-body",this._$root);
+            if(!this.data("noAnimation")){
+                $wheel.animate({
+                    rotateZ:(360*2)+ "deg"
+                },{
+                    duration:2000,
+                    easing:"ease-in"
+                });
+
+                $wheel.animate({
+                    rotateZ:(timeout/1000*1.5*360)+ "deg"
+                },{
+                    duration:timeout,
+                    easing: "linear",
+                    queue:true
+                });
+            }
+
+            return this;
+        },
+
+        _playSetResultOpenAnimation:function(){
+            var self= this;
+
+            var $wheel = $(".wheel-body",this._$root);
+
+            var resultID = this.data("resultID");
+
+            if(this.data("noAnimation")){
+                self._playPrizeAnimation();
+                $wheel.css({
+                    "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
+                });
+            }else{
+                $wheel.animate({
+                    rotateZ:(360*4 + (360/this.data("numDivides"))*resultID)+ "deg"
+                },{
+                    duration:4000,
+                    easing:   "ease-out",
+                    queue: false,
+                    complete:function(){
+                        self._playPrizeAnimation(self.data("prizeDelay"));
+                        $wheel.css({
+                            "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
+                        });
+                    }
+                });
+            }
+
+
+            this._removeInteractive();
+
+            return this;
+        },
+
 
         _playOpenAnimation:function(){
 
@@ -115,7 +176,7 @@
 
 
             if(this.data("noAnimation")){
-                self._playPrizeAnimation(self.data("prizeDelay"));
+                self._playPrizeAnimation();
                 $wheel.css({
                     "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
                 });
