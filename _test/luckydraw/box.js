@@ -269,7 +269,7 @@ test("接口:setResult(result配置项也设置)",function(){
 test("接口:restart",function(){
     stop();
 
-    expect(14);
+    expect(15);
 
     $("body").append('<div id="prize_1">prize</div>');
     $("body").append('<div id="prize_2">prize2</div>');
@@ -306,10 +306,11 @@ test("接口:restart",function(){
             $.later(function(){
             	equals(luckchest._el.find('.chest')[1].className, "chest animate opening", "显示开奖动画");
                 ok(ua.isShown(luckchest.root().find('.prize')[0]),"再次点击后，奖品1.2秒后显示");
-                equals(luckchest.root().find('.prize').children()[0].id,"prize_1", "第一次的中奖画面隐藏");
-                ok(!ua.isShown(luckchest.root().find('.prize').children()[0]), "第一次的中奖画面隐藏");
-                equals(luckchest.root().find('.prize').children()[1].id,"prize_2", "第二次的中奖画面显示");
-                ok(ua.isShown(luckchest.root().find('.prize').children()[1]), "第二次的中奖画面显示");
+                equals(luckchest.root().find('.prize').children().length,1, "第一次的中奖画面从.prize下移除");
+                equals($("body #prize_1").length, 1, "第一次的中奖画面被移回原位");
+                ok(!ua.isShown($("body #prize_1")[0]), "第一次的中奖画面隐藏");
+                equals(luckchest.root().find('.prize').children()[0].id,"prize_2", "第二次的中奖画面显示");
+                ok(ua.isShown(luckchest.root().find('.prize').children()[0]), "第二次的中奖画面显示");
                 
                 $("#prize_2").remove();
                 start();
