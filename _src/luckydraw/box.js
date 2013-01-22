@@ -11,6 +11,7 @@
         _chests:null,
         _$root:null,
         _clickedChest:null,
+        _originalResultContainer:null,
 
         _data: {
             numChests:3,
@@ -97,7 +98,7 @@
         },
 
         restart:function(){
-            $('.prize>*',this._$root).hide();
+            $(this._originalResultContainer).append($('.prize>*',this._$root).hide());
             return this._start();
         },
 
@@ -162,6 +163,8 @@
 
 
                 var $prize = $('.prize', self._$root);
+
+                self._originalResultContainer = $(self.data("result")).parent();
                 $prize.append($(self.data("result")).show());
 
 
