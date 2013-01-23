@@ -166,7 +166,7 @@
 
                 self._originalResultContainer = $(self.data("result")).parent();
                 $prize.append($(self.data("result")).show());
-
+                //
 
                 $prize.css({
                     "marginLeft":-$(self.data("result"))[0].offsetWidth / 2 + "px",
