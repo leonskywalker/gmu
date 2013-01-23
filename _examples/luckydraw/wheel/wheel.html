@@ -43,9 +43,19 @@
 
 
         var fortunewheel = $.ui.fortunewheel("#wheel",{
-            "result":"#prize_dialog",
-            "resultID":prizeID
+            //"result":"#prize_dialog",
+            //"resultID":prizeID
+            startFunc:sendToServer
         });
+
+        function sendToServer(){
+
+            setTimeout(function(){
+                fortunewheel.setResult("#prize_dialog",prizeID);
+            },3000);
+        }
+
+
 
 
         $('#prize_dialog').on("click",function(){

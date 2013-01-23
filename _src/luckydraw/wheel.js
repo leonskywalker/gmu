@@ -7,6 +7,7 @@
 (function($){
     $.ui.define('fortunewheel',{
         _$root:null,
+        _started:false,
 
         _data: {
             numDivides:6,
@@ -18,6 +19,7 @@
             noAnimation:false,
             rotationTime:6000,
             prizeDelay:500
+
         },
 
         _create:function(){
@@ -51,6 +53,7 @@
 
         restart:function(){
             $('.prize>*',this._$root).hide();
+            this._started = false;
             return this._start();
         },
 
@@ -73,7 +76,10 @@
             this._data.result = result;
             this._data.resultID = id;
 
-            if(startImmediately){
+            if(this._started){
+                this._started = false;
+                this._playSetResultOpenAnimation();
+            }else if(startImmediately){
                 this._playOpenAnimation();
             }
 
@@ -98,6 +104,10 @@
                     _self._playOpenAnimation();
                 }else{
                     _self._playWaitForResultAnimation();
+                    _self._started = true;
+                }
+                if($.isFunction(_self._data.startFunc)) {
+                    _self._data.startFunc.call(null);
                 }
             }).removeClass("disabled");
         },
@@ -112,9 +122,9 @@
             var $wheel = $(".wheel-body",this._$root);
             if(!this.data("noAnimation")){
                 $wheel.animate({
-                    rotateZ:(360*2)+ "deg"
+                    rotateZ:(360)+ "deg"
                 },{
-                    duration:2000,
+                    duration:1000,
                     easing:"ease-in"
                 });
 
@@ -126,6 +136,8 @@
                     queue:true
                 });
             }
+
+            this._removeInteractive();
 
             return this;
         },
@@ -143,11 +155,16 @@
                     "-webkit-transform":"rotateZ("+360/self.data("numDivides")*resultID+"deg)"
                 });
             }else{
+                $wheel.stop();
+                //TODO:和之前的角度保持一致
+                $wheel.css({
+                    "-webkit-transform":"rotateZ(0deg)"
+                });
                 $wheel.animate({
                     rotateZ:(360*4 + (360/this.data("numDivides"))*resultID)+ "deg"
                 },{
                     duration:4000,
-                    easing:   "ease-out",
+                    easing: "ease-out",
                     queue: false,
                     complete:function(){
                         self._playPrizeAnimation(self.data("prizeDelay"));
