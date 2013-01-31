@@ -117,13 +117,19 @@ test("初始化参数:numChests",function(){
 test("初始化参数:noAnimation",function(){
     stop();
     expect(2);
+    
+    $("body").append('<div id="prize_1">prize</div>');
     var luckchest = $.ui.luckydrawbox("#luckchest",{
-        noAnimation:true
+        noAnimation:true,
+        result:"#prize_1"
     });
 
     equals(luckchest._data.noAnimation, true, "不播放动画");
     notEqual(luckchest._el.find('.chest-top').css("-webkit-animation-play-state"),"running","不播放动画");
-    start();
+    ua.click(luckchest._el.find(".chest")[1]);
+    $.later(function(){
+    	start();
+    },animationDuration);
 });
 
 test("初始化参数:startFunc",function(){
