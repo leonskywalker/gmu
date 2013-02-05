@@ -224,11 +224,17 @@
         if(this.data("noAnimation")){
             var $prize = $('.prize', this._$root);
             $prize.append($(this.data("result")).show());
-            $prize.css({
-                "marginLeft":-$(this.data("result"))[0].offsetWidth / 2 + "px",
-                "marginTop":-$(this.data("result"))[0].offsetHeight / 2 + "px",
-                "top":180
-            });
+            var self = this;
+
+            $.later(function(){
+                //alert(-$(self.data("result"))[0].offsetWidth / 2 + "px");
+                $prize.css({
+                        "marginLeft":-$(self.data("result"))[0].offsetWidth / 2 + "px",
+                        "marginTop":-$(self.data("result"))[0].offsetHeight / 2 + "px",
+                        "top":180
+                    });
+                });
+
 
             return;
         }
